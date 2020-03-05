@@ -1,26 +1,62 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import text from "./quote.js";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      startedTyping: false,
+      startTime: 0,
+      quote: text,
+      endTime: 0
+    };
+  }
+
+  handleTyping = (e) => {
+    if (this.state.startedTyping) {
+      if (e.target.value.length === this.state.quote.length) {
+        let timeElapsed = Date.now() - this.state.startTime;
+        let words = this.state.quote.length / 5;
+        let minutes = timeElapsed / 60000;
+        let wpm = words / minutes;
+        let count = 0;
+        for (var i = 0; i < this.state.quote.length; i++) {
+          if (this.state.quote[i] === e.target.value[i]) {
+            count += 1;
+          }
+        }
+        let accuracy = (count / this.state.quote.length) * 100;
+        document.getElementById("result").innerHTML =
+          "WPM: " + wpm + "\n" + "Accuracy: " + accuracy;
+        e.target.setAttribute("disabled", "true");
+      }
+    } else {
+      this.setState({
+        startedTyping: true,
+        startTime: Date.now()
+      });
+    }
+  };
+  render() {
+    return (
+      <div className="App">
+        <textarea>
+          {JSON.stringify(this.state.quote)}
+        </textarea>
+        <br />
+        <input
+          type="text"
+          placeholder="Begin typing here"
+          autoFocus
+          onChange={this.handleTyping}
+          id="testInput"
+        ></input>
+        <br />
+        <span id="result"></span>
+      </div>
+    );
+  }
 }
 
 export default App;
