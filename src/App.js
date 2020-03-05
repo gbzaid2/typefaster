@@ -41,8 +41,12 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <textarea>
-          {JSON.stringify(this.state.quote)}
+        <textarea
+        rows = "10"
+        cols = "70"
+        spellCheck = "false"
+        >
+          {this.state.quote}
         </textarea>
         <br />
         <input
